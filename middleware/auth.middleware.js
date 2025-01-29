@@ -16,6 +16,6 @@ export const authUser=async(req,res,next)=>{
         req.user=decoded;
         next();
     } catch (error) {
-        res.status(401).send({error:'Plaese authenticate'});
+        res.status(401).send({error:'Please authenticate'});
     }
 }
