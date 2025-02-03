@@ -12,7 +12,7 @@ export const createProjectController=async (req,res)=>{
         const {name}=req.body;
         const loggedInUser=await userModel.findOne({email:req.user.email});
         const userId=loggedInUser._id;
-        const newProject=await createProject({name,userId:[userId]});
+        const newProject=await createProject({name,userId:[userId],fileTree:{}});
         await createRoom({projectId:newProject._id});
         res.status(201).json(newProject);
     } catch (error) {
@@ -50,7 +50,6 @@ export const addUserToProject=async (req,res)=>{
     }
 }
 
-
 export const getProjectById=async (req,res)=>{
     const {projectId}=req.params;
     try {
@@ -58,6 +57,18 @@ export const getProjectById=async (req,res)=>{
         return res.status(200).json({project})
     } catch (error) {
         console.log(error)
+        return res.status(400).json({error:error.message});
+    }
+}
+
+export const updateFileTree=async (req,res)=>{
+    const fileTree=req.body.fileTree;
+    try {
+        const project=await getProjectByID({projectId:req.params.projectId});
+        project.fileTree=fileTree;
+        await project.save();
+    } catch (error) {
+        console.log(error);
         return res.status(400).json({error:error.message});
     }
 }
