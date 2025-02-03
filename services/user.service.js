@@ -5,6 +5,7 @@ export const createUser=async ({email,password})=>{
         throw new Error("Email and password are required");
     }
     const hashedPassword=await userModel.hashPassword(password);
+    return res.status(200).json(hashedPassword)
     const user=await userModel.create({email,password:hashedPassword});
     return user;
 }
