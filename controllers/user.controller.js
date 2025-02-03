@@ -5,6 +5,7 @@ import redisClient from '../services/redis.service.js'
 
 export const createUserController=async(req,res)=>{
     const errors=validationResult(req);
+    return res.status(200).json({message:'Hi'})
     if(!errors.isEmpty()){
         return res.status(400).json({errors:errors.array()})
     }
