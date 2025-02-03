@@ -9,10 +9,7 @@ import roomRoutes from './routes/room.routes.js';
 
 
 const app=express();
-app.use(cors({
-    origin:process.env.FRONTEND_URL || 'http://localhost:5173',
-    credentials:true
-}));
+app.use(cors());
 
 connect();
 // app.use(morgan('dev'));
