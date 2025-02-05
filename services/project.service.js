@@ -1,5 +1,5 @@
 import projectModel from "../models/project.model.js";
-import mongoose from "mongoose";
+import mongoose from "mongoose"
 
 export const createProject=async ({
     name,
@@ -23,7 +23,7 @@ export const getAllProjectByUserId=async ({userId}) => {
     if(!userId){
         throw new Error('UserId is required')
     }
-    const allUserProjects=await projectModel.find({users:userId})
+    const allUserProjects = await projectModel.find({ users: { $in: [userId] } });
     return allUserProjects;
 }
 
