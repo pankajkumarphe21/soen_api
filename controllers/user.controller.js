@@ -12,7 +12,12 @@ export const createUserController=async(req,res)=>{
         const user=await createUser(req.body);
         const token=await user.generateJWT(req.body.email);
         delete user._doc.password
-        res.status(201).json({user,token});
+        res.cookie('token',token,{
+            httpOnly:true,
+            secure: true, 
+            sameSite: 'None',
+            maxAge: 3600 * 1000 * 24 * 21 ,
+        }).status(201).json({user,token});
     } catch (error) {
         res.status(400).send(error.message);
     }
@@ -39,7 +44,12 @@ export const loginUserController=async(req,res)=>{
         }
         delete user._doc.password;
         const token=await user.generateJWT(email);
-        return res.status(200).json({user,token})
+        return res.cookie('token',token,{
+            httpOnly:true,
+            secure: true, 
+            sameSite: 'None',
+            maxAge: 3600 * 1000 * 24 * 21 ,
+        }).status(200).json({user,token})
     } catch (error) {
         res.status(400).send(error.message);
     }

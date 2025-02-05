@@ -7,7 +7,7 @@ const router = Router();
 
 router.post('/create', authUser, body('name').isString().withMessage('Name is required'), createProjectController);
 
-router.get('/all', authUser, getAllProject);
+router.get('/all/:email', authUser, getAllProject);
 
 router.put('/add-user', authUser, body('projectId').isString().withMessage('Project ID is required'),
     body('users').isArray({ min: 1 }).withMessage('Users must be an array of strings').bail()
