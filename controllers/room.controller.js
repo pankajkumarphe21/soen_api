@@ -15,7 +15,7 @@ export const sendMessage=async (req,res)=>{
     const user=await userModel.findOne({_id:req.body._id});
     let output=null;
     if(req.body.message.includes('@ai')){
-        const message=await generateResult(req.body.message);
+        const message=await generateResult(req.body.message+".I am doing JSON.parse(message.split('```json')[1].split('```')[0]) so give response which is parseable");
         room.messages.push({userId:user._id,text_message:req.body.message,createdAt:Date.now()});
         output=message;
         room.messages.push({userId:user._id,text_message:message,createdAt:Date.now(),category:'ai'});
