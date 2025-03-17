@@ -16,3 +16,19 @@ export const createRoom=async({projectId})=>{
         throw new Error(error.message)
     }
 }
+
+export const deleteRoom=async({projectId})=>{
+    if (!projectId) {
+        throw new Error("projectId is required")
+    }
+
+    if (!mongoose.Types.ObjectId.isValid(projectId)) {
+        throw new Error("Invalid projectId")
+    }
+    try {
+        const room=await roomModel.findOneAndDelete({projectId});
+        return;
+    } catch (error) {
+        throw new Error(error.message)
+    }
+}

@@ -1,7 +1,7 @@
 import userModel from "../models/user.model.js";
-import { addUsersToProject, createProject, getAllProjectByUserId,getProjectByID } from "../services/project.service.js";
+import { addUsersToProject, createProject, getAllProjectByUserId,deleteProject, getAdmin, getProjectByID } from "../services/project.service.js";
 import {validationResult} from 'express-validator';
-import { createRoom } from "../services/room.service.js";
+import { createRoom, deleteRoom } from "../services/room.service.js";
 
 export const createProjectController=async (req,res)=>{
     const errors=validationResult(req);
@@ -25,9 +25,29 @@ export const getAllProject=async (req,res)=>{
     try {
         const loggedInUser=await userModel.findOne({
             email:req.params.email
-        })
+        });
         const allUserProjects=await getAllProjectByUserId({userId:loggedInUser});
         return res.status(200).json({projects:allUserProjects});
+    } catch (error) {
+        console.log(error);
+        res.status(400).json({error:error.message});
+    }
+}
+
+export const deleteProjectController=async (req,res)=>{
+    try {
+        const projectId=req.params.projectId;
+        const admin=await getAdmin({projectId});
+        const user=await userModel.findOne({_id:admin});
+        const user_email=user.email;
+        if(req.user.email==user_email){
+            await deleteProject({projectId});
+            await deleteRoom({projectId});
+        }
+        else{
+            return res.status(401).json({message:"You can't delete"})
+        }
+        return res.status(200).json({message:'project deleted'});
     } catch (error) {
         console.log(error);
         res.status(400).json({error:error.message});

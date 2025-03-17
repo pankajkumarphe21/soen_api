@@ -27,6 +27,40 @@ export const getAllProjectByUserId=async ({userId}) => {
     return allUserProjects;
 }
 
+export const deleteProject=async ({projectId}) => {
+    if(!projectId){
+        throw new Error('UserId is required')
+    }
+    if (!mongoose.Types.ObjectId.isValid(projectId)) {
+        throw new Error("Invalid projectId")
+    }
+    const allUserProjects = await projectModel.findByIdAndDelete(projectId);
+    return allUserProjects;
+}
+
+export const getAdmin=async ({projectId}) => {
+    if(!projectId){
+        throw new Error('UserId is required')
+    }
+    if (!mongoose.Types.ObjectId.isValid(projectId)) {
+        throw new Error("Invalid projectId")
+    }
+    const project=await projectModel.findById(projectId);
+    const user = project.users[0];
+    return user;
+}
+
+export const getProjectByID=async ({projectId})=>{
+    if (!projectId) {
+        throw new Error("projectId is required")
+    }
+    if (!mongoose.Types.ObjectId.isValid(projectId)) {
+        throw new Error("Invalid projectId")
+    }
+    const project=await projectModel.findOne({_id:projectId}).populate('users');
+    return project;
+};
+
 export const addUsersToProject=async ({projectId,users,userId}) => {
     if (!projectId) {
         throw new Error("projectId is required")
@@ -71,14 +105,3 @@ export const addUsersToProject=async ({projectId,users,userId}) => {
     await project.save();
     return project;
 }
-
-export const getProjectByID=async ({projectId})=>{
-    if (!projectId) {
-        throw new Error("projectId is required")
-    }
-    if (!mongoose.Types.ObjectId.isValid(projectId)) {
-        throw new Error("Invalid projectId")
-    }
-    const project=await projectModel.findOne({_id:projectId}).populate('users');
-    return project;
-};
